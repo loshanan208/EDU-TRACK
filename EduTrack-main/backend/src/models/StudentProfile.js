@@ -38,7 +38,7 @@ const studentProfileSchema = new mongoose.Schema(
     },
     studentId: {
       type: String,
-      required: [true, "Student ID is required"],
+      required: [true, "Student ID is required"], 
       unique: true,
       uppercase: true,
       trim: true,
