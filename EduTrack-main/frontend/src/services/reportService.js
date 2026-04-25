@@ -3,7 +3,7 @@ import apiClient from "./apiClient";
 export async function fetchOverviewReport() {
   const { data } = await apiClient.get("/reports/overview");
   return data;
-}
+} 
 
 export async function fetchCourseSummary(courseId) {
   const { data } = await apiClient.get(`/reports/course/${courseId}/summary`);
