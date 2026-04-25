@@ -8,7 +8,7 @@ export async function fetchOverviewReport() {
 export async function fetchCourseSummary(courseId) {
   const { data } = await apiClient.get(`/reports/course/${courseId}/summary`);
   return data;
-}
+} 
 
 export async function fetchStudentSummary(studentId) {
   const { data } = await apiClient.get(`/reports/student/${studentId}/summary`);
