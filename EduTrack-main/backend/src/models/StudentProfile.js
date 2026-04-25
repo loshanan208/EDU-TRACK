@@ -46,7 +46,7 @@ const studentProfileSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      required: [true, "Date of birth is required"],
+      required: [true, "Date of birth is required"], 
     },
     gender: {
       type: String,
