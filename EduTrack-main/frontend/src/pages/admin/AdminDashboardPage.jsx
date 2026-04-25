@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import LoadingState from "../../components/common/LoadingState";
 import StatCard from "../../components/common/StatCard";
-import { fetchOverviewReport } from "../../services/reportService";
+import { fetchOverviewReport } from "../../services/reportService"; 
 
 // SVG path constants for StatCard icons
 const ICONS = {
