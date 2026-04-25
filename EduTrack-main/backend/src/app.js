@@ -13,7 +13,7 @@ const reportRoutes = require("./routes/reportRoutes");
 const userRoutes = require("./routes/userRoutes");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
-const app = express();
+const app = express(); 
 
 app.use(
   cors({
