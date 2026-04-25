@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:5000/api
+@adminEmail = admin@edutrack.edu
+@adminPassword = Admin@12345
+
+### Health
+GET {{baseUrl}}/health
+
+### Admin Login
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+### Capture token
+@adminToken = {{adminLogin.response.body.token}}
+
+### Teachers
+GET {{baseUrl}}/users/teachers
+Authorization: Bearer {{adminToken}}
+
+### Students
+GET {{baseUrl}}/students
+Authorization: Bearer {{adminToken}}
+
+### Courses
+GET {{baseUrl}}/courses
+Authorization: Bearer {{adminToken}}
+
+### Overview report
+GET {{baseUrl}}/reports/overview
+Authorization: Bearer {{adminToken}}
