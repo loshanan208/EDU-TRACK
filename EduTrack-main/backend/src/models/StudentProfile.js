@@ -15,7 +15,7 @@ const guardianSchema = new mongoose.Schema(
     phone: {
       type: String,
       trim: true,
-      maxlength: 20,
+      maxlength: 20, 
     },
     email: {
       type: String,
