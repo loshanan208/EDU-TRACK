@@ -4,7 +4,7 @@ const { body, param } = require("express-validator");
 const {
   createStudent,
   getStudents,
-  getStudentById,
+  getStudentById, 
   getMyStudentProfile,
   updateStudent,
   deactivateStudent,
