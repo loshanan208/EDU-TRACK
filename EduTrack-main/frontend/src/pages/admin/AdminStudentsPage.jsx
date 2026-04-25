@@ -6,7 +6,7 @@ import FormMessage from "../../components/common/FormMessage";
 import LoadingState from "../../components/common/LoadingState";
 import { createStudent, deactivateStudent, fetchStudents, updateStudent } from "../../services/studentService";
 
-const PROGRAMS = [
+const PROGRAMS = [ 
   "BSc (Hons) Computer Science",
   "BSc (Hons) Data Science",
   "BSc (Hons) Information Technology",
