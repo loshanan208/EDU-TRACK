@@ -6,7 +6,7 @@ import FormMessage from "../../components/common/FormMessage";
 import LoadingState from "../../components/common/LoadingState";
 import { markAttendanceBulk } from "../../services/attendanceService";
 import { fetchCourses } from "../../services/courseService";
-import { fetchEnrollments } from "../../services/enrollmentService";
+import { fetchEnrollments } from "../../services/enrollmentService"; 
 
 function TeacherAttendancePage() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ function TeacherAttendancePage() {
   useEffect(() => {
     let mounted = true;
 
-    async function loadData() {
+    async function loadData() { 
       try {
         const response = await fetchCourses();
         if (mounted) {
@@ -40,7 +40,7 @@ function TeacherAttendancePage() {
 
   useEffect(() => {
     async function loadEnrollments() {
-      if (!selectedCourse) return;
+      if (!selectedCourse) return; 
       const response = await fetchEnrollments({ course: selectedCourse, status: "Enrolled" });
       setRows(
         (response.data || []).map((item) => ({
@@ -52,7 +52,7 @@ function TeacherAttendancePage() {
     }
 
     loadEnrollments();
-  }, [selectedCourse]);
+  }, [selectedCourse]); 
 
   const courseName = useMemo(
     () => courses.find((course) => course._id === selectedCourse)?.title || "",
