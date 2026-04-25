@@ -29,3 +29,4 @@ export async function downloadCourseCsv(courseId, filename = "course-report.csv"
   link.remove();
   window.URL.revokeObjectURL(blobUrl);
 }
+ 
