@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 
+// Import reusable UI components
 import DataTable from "../../components/common/DataTable";
 import EmptyState from "../../components/common/EmptyState";
 import FormMessage from "../../components/common/FormMessage";
 import LoadingState from "../../components/common/LoadingState";
+
+// Import API services for courses and user management
 import { archiveCourse, createCourse, fetchCourses } from "../../services/courseService";
 import { createTeacher, fetchTeachers } from "../../services/userService";
 
+/**
+ * Initial state for the Course creation form.
+ * Includes scheduling details and academic information.
+ */
 const initialForm = {
   code: "",
   title: "",
@@ -23,6 +30,7 @@ const initialForm = {
 };
 
 function AdminCoursesPage() {
+  // --- State Management ---
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,26 +43,45 @@ function AdminCoursesPage() {
     password: "",
   });
 
+  /**
+   * Fetches the latest courses and registered teachers from the backend.
+   * Uses Promise.all to fetch both datasets concurrently for better performance.
+   */
   async function loadCourses() {
     setLoading(true);
     try {
-      const [coursesResponse, teachersResponse] = await Promise.all([fetchCourses(), fetchTeachers()]);
+      const [coursesResponse, teachersResponse] = await Promise.all([
+        fetchCourses(),
+        fetchTeachers()
+      ]);
       setCourses(coursesResponse.data || []);
       setTeachers(teachersResponse.data || []);
+    } catch (err) {
+      console.error("Initialization error:", err);
     } finally {
       setLoading(false);
     }
   }
 
+  // Load data on component mount
   useEffect(() => {
     loadCourses();
   }, []);
 
+  // --- Course Form Handlers ---
+
+  /**
+   * Updates course form state based on user input.
+   */
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Handles the submission of a new course.
+   * Formats data to match backend schema requirements (Nested schedule array).
+   */
   const handleCreate = async (event) => {
     event.preventDefault();
     setSaving(true);
@@ -62,12 +89,9 @@ function AdminCoursesPage() {
 
     try {
       await createCourse({
-        code: form.code,
-        title: form.title,
-        subject: form.subject,
+        ...form,
         credits: Number(form.credits),
         capacity: Number(form.capacity),
-        teacher: form.teacher,
         semester: Number(form.semester),
         academicYear: Number(form.academicYear),
         status: "Published",
@@ -81,51 +105,68 @@ function AdminCoursesPage() {
         ],
       });
 
-      setForm(initialForm);
+      setForm(initialForm); // Reset form after success
       setFormMessage({ type: "success", message: "Course created successfully." });
-      await loadCourses();
+      await loadCourses(); // Refresh table data
     } catch (err) {
-      setFormMessage({ type: "error", message: err.response?.data?.message || "Failed to create course" });
+      setFormMessage({ 
+        type: "error", 
+        message: err.response?.data?.message || "Failed to create course" 
+      });
     } finally {
       setSaving(false);
     }
   };
+
+  // --- Teacher Form Handlers ---
 
   const handleTeacherChange = (event) => {
     const { name, value } = event.target;
     setTeacherForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Creates a new user with the 'Teacher' role.
+   * Allows admins to provision accounts before assigning them to courses.
+   */
   const handleCreateTeacher = async (event) => {
     event.preventDefault();
-
     try {
       await createTeacher(teacherForm);
       setTeacherForm({ fullName: "", email: "", password: "" });
       setFormMessage({ type: "success", message: "Teacher account created successfully." });
       await loadCourses();
     } catch (err) {
-      setFormMessage({ type: "error", message: err.response?.data?.message || "Failed to create teacher" });
+      setFormMessage({ 
+        type: "error", 
+        message: err.response?.data?.message || "Failed to create teacher" 
+      });
     }
   };
 
+  /**
+   * Soft-archives a course to remove it from active listings.
+   * @param {string} courseId - The unique ID of the course.
+   */
   const handleArchive = async (courseId) => {
-    const confirmed = window.confirm("Archive this course?");
+    const confirmed = window.confirm("Are you sure you want to archive this course?");
     if (!confirmed) return;
 
     try {
       await archiveCourse(courseId);
-      await loadCourses();
+      await loadCourses(); // Refresh UI
     } catch {
       setFormMessage({ type: "error", message: "Failed to archive course" });
     }
   };
 
+  // Tailwind CSS class constants for UI consistency
   const inputCls = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-100 transition";
   const primaryCls = "rounded-xl bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-brand-600 hover:to-brand-700 disabled:opacity-60 transition";
 
   return (
     <section className="space-y-6 animate-fade-in">
+      {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Course Management</h2>
@@ -133,6 +174,7 @@ function AdminCoursesPage() {
         </div>
       </div>
 
+      {/* Teacher Provisioning Form */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
         <h3 className="mb-4 text-base font-bold text-slate-900">Add Teacher Account</h3>
         <form onSubmit={handleCreateTeacher} className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -147,12 +189,16 @@ function AdminCoursesPage() {
         </form>
       </div>
 
+      {/* Course Creation Form */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
         <h3 className="mb-4 text-base font-bold text-slate-900">Add New Course</h3>
         <form onSubmit={handleCreate} className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          {/* ... inputs for course code, title, subject, etc ... */}
           <input name="code" value={form.code} onChange={handleChange} required placeholder="Course code" className={inputCls} />
           <input name="title" value={form.title} onChange={handleChange} required placeholder="Course title" className={inputCls} />
           <input name="subject" value={form.subject} onChange={handleChange} required placeholder="Subject" className={inputCls} />
+          
+          {/* Dynamic teacher selection dropdown */}
           <select name="teacher" value={form.teacher} onChange={handleChange} required className={inputCls}>
             <option value="">Select teacher</option>
             {teachers.map((teacher) => (
@@ -161,25 +207,27 @@ function AdminCoursesPage() {
               </option>
             ))}
           </select>
+          
+          {/* Numeric and Schedule Inputs */}
           <input name="credits" value={form.credits} onChange={handleChange} required placeholder="Credits" className={inputCls} />
           <input name="capacity" value={form.capacity} onChange={handleChange} required placeholder="Capacity" className={inputCls} />
           <input name="semester" value={form.semester} onChange={handleChange} required placeholder="Semester" className={inputCls} />
           <input name="academicYear" value={form.academicYear} onChange={handleChange} required placeholder="Academic Year" className={inputCls} />
+          
           <select name="dayOfWeek" value={form.dayOfWeek} onChange={handleChange} className={inputCls}>
-            <option>Monday</option>
-            <option>Tuesday</option>
-            <option>Wednesday</option>
-            <option>Thursday</option>
-            <option>Friday</option>
-            <option>Saturday</option>
-            <option>Sunday</option>
+            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(day => (
+                <option key={day}>{day}</option>
+            ))}
           </select>
+
           <div className="grid grid-cols-2 gap-2">
             <input type="time" name="startTime" value={form.startTime} onChange={handleChange} required className={inputCls} />
             <input type="time" name="endTime" value={form.endTime} onChange={handleChange} required className={inputCls} />
           </div>
+
           <input name="room" value={form.room} onChange={handleChange} placeholder="Room" className={`${inputCls} md:col-span-2`} />
 
+          {/* Feedback Messages */}
           <div className="md:col-span-2">
             <FormMessage type={formMessage.type} message={formMessage.message} />
           </div>
@@ -192,6 +240,7 @@ function AdminCoursesPage() {
         </form>
       </div>
 
+      {/* Data Display Section */}
       {loading ? <LoadingState label="Loading courses..." /> : null}
 
       {!loading && !courses.length ? (
