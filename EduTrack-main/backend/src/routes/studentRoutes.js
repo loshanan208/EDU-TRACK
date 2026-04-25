@@ -9,7 +9,7 @@ const {
   updateStudent,
   deactivateStudent,
 } = require("../controllers/studentController");
-const { protect, authorize } = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware"); 
 
 const router = express.Router();
 
