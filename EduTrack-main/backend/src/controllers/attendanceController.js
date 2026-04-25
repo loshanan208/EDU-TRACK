@@ -9,7 +9,7 @@ async function markAttendanceBulk(req, res, next) {
   try {
     if (!validateRequest(req, res)) return;
 
-    const { courseId, date, records } = req.body;
+    const { courseId, date, records } = req.body;  
 
     const course = await Course.findById(courseId);
     if (!course) {
