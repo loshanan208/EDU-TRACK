@@ -9,7 +9,7 @@ const attendanceSchema = new mongoose.Schema(
       index: true,
     },
     course: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId, 
       ref: "Course",
       required: true,
       index: true,
