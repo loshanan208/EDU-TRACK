@@ -8,7 +8,7 @@ const {
 } = require("../controllers/attendanceController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 
-const router = express.Router();
+const router = express.Router(); 
 
 router.use(protect);
 
