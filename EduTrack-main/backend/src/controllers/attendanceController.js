@@ -3,9 +3,9 @@ const Course = require("../models/Course");
 const StudentProfile = require("../models/StudentProfile");
 const Enrollment = require("../models/Enrollment");
 
-const validateRequest = require("../utils/validateRequest");
+const validateRequest = require("../utils/validateRequest"); 
 
-async function markAttendanceBulk(req, res, next) {
+async function markAttendanceBulk(req, res, next) { 
   try {
     if (!validateRequest(req, res)) return;
 
