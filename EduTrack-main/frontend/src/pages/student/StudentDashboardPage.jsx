@@ -10,7 +10,7 @@ function StudentDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [profile, setProfile] = useState(null);
-  const [enrollments, setEnrollments] = useState([]);
+  const [enrollments, setEnrollments] = useState([]); 
 
   useEffect(() => {
     let mounted = true;
