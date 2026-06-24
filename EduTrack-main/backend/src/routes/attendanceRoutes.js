@@ -10,10 +10,10 @@ const { protect, authorize } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-router.use(protect);
+router.use(protect);  
 
 router.post(
-  "/mark-bulk",
+  "/mark-bulk", 
   authorize("Teacher", "Admin"),
   [
     body("courseId").isMongoId().withMessage("Valid course id is required"),
@@ -28,7 +28,7 @@ router.post(
 );
 
 router.get(
-  "/course/:courseId",
+  "/course/:courseId", 
   authorize("Admin", "Teacher"),
   [param("courseId").isMongoId().withMessage("Invalid course id")],
   getCourseAttendance
