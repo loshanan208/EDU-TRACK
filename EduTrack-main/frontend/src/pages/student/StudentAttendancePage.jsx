@@ -12,7 +12,7 @@ import { fetchMyStudentProfile } from "../../services/studentService";
 
 function StudentAttendancePage() {
   // State to handle loading status
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
 
   // Store attendance records
   const [records, setRecords] = useState([]);
